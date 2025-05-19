@@ -57,6 +57,7 @@
     
     .app-container {
       display: flex;
+      flex-direction: row;
       height: calc(100vh - 60px);
       overflow: hidden;
     }
@@ -70,28 +71,42 @@
       align-items: center;
       border-bottom: 1px solid var(--border);
       height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
     
-
-    
     .logo {
-        
-        padding: 5px 10px;
-        border-radius: 4px;
-        display: inline-flex;
-        align-items: center;
-      }
+      padding: 5px 10px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+    }
       
-      .logo img {
-        height: 40px; /* adjust as needed */
-        width: 100px;
-        display: block;
-      }
-      
+    .logo img {
+      height: 40px;
+      width: auto;
+      max-width: 100px;
+      display: block;
+    }
     
     .user-controls {
       display: flex;
       align-items: center;
+      gap: 10px;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: var(--primary);
+      color: var(--primary-text);
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      margin-right: 10px;
     }
     
     .theme-toggle {
@@ -115,6 +130,13 @@
       overflow-y: auto;
       padding: 20px;
       position: relative;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    
+    /* Hide scrollbar */
+    .main-content::-webkit-scrollbar {
+      display: none;
     }
     
     /* Media Player */
@@ -125,16 +147,23 @@
       margin-bottom: 20px;
       position: relative;
       border: 1px solid var(--border);
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
     }
     
     .media-container {
       width: 100%;
-      height: 300px;
+      height: 0;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
       position: relative;
       background-color: #000;
     }
     
     .media-video {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -142,6 +171,7 @@
     
     .media-audio {
       display: none;
+      width: 100%;
     }
     
     .tuner-display {
@@ -223,6 +253,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     
     .media-toggle {
@@ -265,6 +297,7 @@
       flex-direction: column;
       align-items: center;
       gap: 5px;
+      touch-action: none;
     }
     
     .knob-dial {
@@ -295,7 +328,7 @@
       color: var(--text-secondary);
     }
     
-    /* Sidebar */
+    /* Sidebar - Always visible on medium/large screens */
     .sidebar {
       width: var(--sidebar-width);
       background-color: var(--surface);
@@ -312,6 +345,7 @@
       border-bottom: 1px solid var(--border);
       scrollbar-width: thin;
       scrollbar-color: var(--primary) var(--surface-3);
+      -webkit-overflow-scrolling: touch;
     }
     
     .categories::-webkit-scrollbar {
@@ -349,6 +383,7 @@
       padding: 15px;
       scrollbar-width: thin;
       scrollbar-color: var(--primary) var(--surface-3);
+      -webkit-overflow-scrolling: touch;
     }
     
     .blogs::-webkit-scrollbar {
@@ -414,11 +449,7 @@
       padding: 20px;
       overflow-y: auto;
       z-index: 10;
-    }
-
-    /* Hide scrollbar */
-    .main-content::-webkit-scrollbar {
-        display: none;
+      -webkit-overflow-scrolling: touch;
     }
     
     .blog-detail-header {
@@ -434,6 +465,7 @@
       background-color: var(--surface-3);
       margin-right: 15px;
       border: 2px solid var(--primary);
+      flex-shrink: 0;
     }
     
     .author-info {
@@ -449,6 +481,7 @@
       font-size: 28px;
       font-weight: bold;
       margin-bottom: 15px;
+      word-wrap: break-word;
     }
     
     .blog-detail-content {
@@ -492,6 +525,7 @@
       min-height: 113px;
       max-width: 500px;
       max-height: 281px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
     
     .pip-header {
@@ -501,6 +535,7 @@
       justify-content: space-between;
       align-items: center;
       cursor: move;
+      touch-action: none;
     }
     
     .pip-title {
@@ -516,6 +551,11 @@
       cursor: pointer;
       font-size: 16px;
       font-weight: bold;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
     .pip-video {
@@ -525,25 +565,115 @@
       object-fit: cover;
     }
     
-    /* Mobile Responsiveness */
+    /* Floating Action Button - Only for small screens */
+    .fab {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background-color: var(--primary);
+      color: var(--primary-text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      z-index: 80;
+      cursor: pointer;
+      border: none;
+    }
+    
+    /* Small Tablet and Large Mobile - Sidebar becomes toggleable */
     @media (max-width: 768px) {
-      .app-container {
-        flex-direction: column;
+      .menu-toggle {
+        display: flex;
+        align-items: center;
       }
       
       .sidebar {
-        width: 100%;
-        height: 50%;
-        border-left: none;
-        border-top: 1px solid var(--border);
+        position: fixed;
+        top: 60px;
+        right: 0;
+        height: calc(100vh - 60px);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 90;
+        width: 80%;
+        max-width: 300px;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      
+      .fab {
+        display: flex;
+      }
+      
+      .logo::after {
+        font-size: 14px;
+        margin-left: 10px;
+        color: var(--primary);
+        animation: pulse 2s infinite;
+      }
+      
+      @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.6; }
+        100% { opacity: 1; }
+      }
+    }
+    
+    /* Tablet */
+    @media (max-width: 992px) {
+      .sidebar {
+        width: 280px;
       }
       
       .media-container {
-        height: 200px;
+        padding-bottom: 60%;
       }
       
-      .control-knobs {
-        gap: 10px;
+      .program-title {
+        font-size: 22px;
+      }
+      
+      .blog-detail-title {
+        font-size: 24px;
+      }
+    }
+    
+    /* Mobile */
+    @media (max-width: 480px) {
+      .logo img {
+        height: 32px;
+      }
+      
+      .main-content {
+        padding: 15px 10px;
+      }
+      
+      .media-container {
+        padding-bottom: 70%;
+      }
+      
+      .media-controls {
+        padding: 10px;
+      }
+      
+      .control-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .program-description {
+        font-size: 14px;
+        max-height: 60px;
+        -webkit-line-clamp: 2;
       }
       
       .knob-dial {
@@ -551,29 +681,8 @@
         height: 40px;
       }
       
-      .program-title {
-        font-size: 20px;
-      }
-      
-      .blog-detail-title {
-        font-size: 22px;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .media-container {
-        height: 180px;
-      }
-      
-      .control-row {
-        flex-direction: column;
-        gap: 10px;
-        align-items: flex-start;
-      }
-      
-      .program-description {
-        max-height: 60px;
-        -webkit-line-clamp: 2;
+      .control-knobs {
+        gap: 12px;
       }
       
       .blog-item {
@@ -590,6 +699,124 @@
         height: 113px;
         min-width: 150px;
         min-height: 84px;
+        right: 10px;
+        bottom: 10px;
+      }
+      
+      .blog-detail {
+        padding: 15px 10px;
+      }
+      
+      .blog-detail-title {
+        font-size: 20px;
+      }
+      
+      .author-avatar {
+        width: 40px;
+        height: 40px;
+      }
+      
+      .author-name {
+        font-size: 16px;
+      }
+      
+      .blog-detail-content {
+        font-size: 15px;
+      }
+    }
+    
+    /* Very Small Screens */
+    @media (max-width: 320px) {
+      .logo img {
+        height: 28px;
+      }
+      
+      .media-container {
+        padding-bottom: 75%;
+      }
+      
+      .program-title {
+        font-size: 18px;
+      }
+      
+      .program-description {
+        font-size: 13px;
+        -webkit-line-clamp: 2;
+      }
+      
+      .knob {
+        margin-bottom: 5px;
+      }
+      
+      .knob-dial {
+        width: 35px;
+        height: 35px;
+      }
+      
+      .pip-container {
+        width: 160px;
+        height: 90px;
+      }
+    }
+    
+    /* Landscape Orientation Adjustments */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .app-container {
+        height: auto;
+      }
+      
+      .media-container {
+        padding-bottom: 40%;
+      }
+      
+      .media-controls {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      
+      .program-info {
+        width: 60%;
+      }
+      
+      .control-row, .control-knobs {
+        width: 35%;
+      }
+    }
+
+    .desc-start{
+      width: auto;
+
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    /* Print styles for better accessibility */
+    @media print {
+      body {
+        background-color: white;
+        color: black;
+      }
+      
+      .media-player, .pip-container, .sidebar, .theme-toggle, .menu-toggle, .fab {
+        display: none !important;
+      }
+      
+      .blog-detail {
+        display: block !important;
+        position: static;
+        overflow: visible;
+      }
+    }
+    
+    /* Prefers reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        animation: none !important;
+      }
+      
+      .logo::after {
+        animation: none !important;
       }
     }
   </style>
@@ -597,10 +824,10 @@
 <body>
   <header>
     <div class="logo">
-        <img src="./tugende.png" alt="Tugenda kikadda logo" />
-         <!-- <img class="logo" src="./tugende.png" alt="logo" srcset=""> -->
+      <img src="./tugende.png" alt="Tugenda kikadda logo" />
     </div>
     <div class="user-controls">
+      <button class="menu-toggle" id="menu-toggle">☰</button>
       <button class="theme-toggle" id="theme-toggle">🌙</button>
     </div>
   </header>
@@ -609,7 +836,7 @@
     <div class="main-content">
       <div class="media-player">
         <div class="media-container" id="media-container">
-          <video class="media-video" id="main-video" controls autoplay muted loop>
+          <video class="media-video" id="main-video" controls autoplay muted playsinline loop>
             <source src="./radio_test.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
@@ -631,29 +858,39 @@
         </div>
         <div class="media-controls">
           <div class="program-info">
-            <div class="program-title">Program Title</div>
-            <div class="program-schedule">Weekdays, 7AM-10AM</div>
+            <div class="desc-start">
+             <div>
+                <div class="program-title">Program Title</div>
+                <div class="program-schedule">Weekdays, 7AM-10AM</div>
+              </div>
+              <div class="control-rows">
+                <div class="media-toggle">
+                  <button class="toggle-btn active" id="video-btn">Video</button>
+                  <button class="toggle-btn" id="audio-btn">Audio</button>
+                </div>
+              </div>
+            </div>
             <div class="program-description">
               Start your day right with Morning Vibes with Mel! Join your favorite host, Mel, as she brings you an energetic mix of chart-topping hits, feel-good classics, and exclusive interviews with local artists and celebrities.
             </div>
           </div>
-          <div class="control-row">
+          <!-- <div class="control-row">
             <div class="media-toggle">
               <button class="toggle-btn active" id="video-btn">Video</button>
               <button class="toggle-btn" id="audio-btn">Audio</button>
             </div>
-          </div>
+          </div> -->
           <div class="control-knobs">
             <div class="knob">
-              <div class="knob-dial"></div>
+              <div class="knob-dial" data-type="bass"></div>
               <div class="knob-label">Bass</div>
             </div>
             <div class="knob">
-              <div class="knob-dial"></div>
+              <div class="knob-dial" data-type="treble"></div>
               <div class="knob-label">Treble</div>
             </div>
             <div class="knob">
-              <div class="knob-dial"></div>
+              <div class="knob-dial" data-type="volume"></div>
               <div class="knob-label">Volume</div>
             </div>
           </div>
@@ -680,7 +917,7 @@
       </div>
     </div>
     
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
       <div class="categories">
         <div class="category active">comedy</div>
         <div class="category">health</div>
@@ -735,11 +972,13 @@
       <div class="pip-title">Program Title</div>
       <button class="pip-close" id="pip-close">×</button>
     </div>
-    <video class="pip-video" id="pip-video" muted>
-      <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+    <video class="pip-video" id="pip-video" muted playsinline loop>
+      <source src="./radio_test.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
   </div>
+  
+  <button class="fab" id="fab-blogs">☰</button>
   
   <script>
     // DOM Elements
@@ -757,6 +996,9 @@
     const backBtnEl = document.getElementById('back-btn');
     const categoryEls = document.querySelectorAll('.category');
     const themeToggleEl = document.getElementById('theme-toggle');
+    const menuToggleEl = document.getElementById('menu-toggle');
+    const sidebarEl = document.getElementById('sidebar');
+    const fabEl = document.getElementById('fab-blogs');
     const htmlEl = document.documentElement;
     
     // Initialize media
@@ -779,7 +1021,21 @@
     // Initialize on page load
     window.addEventListener('DOMContentLoaded', () => {
       initMedia();
+      updateSidebarVisibility();
     });
+    
+    // Update sidebar visibility based on screen size
+    function updateSidebarVisibility() {
+      if (window.innerWidth <= 768) {
+        menuToggleEl.style.display = 'flex';
+        fabEl.style.display = 'flex';
+        sidebarEl.classList.remove('active');
+      } else {
+        menuToggleEl.style.display = 'none';
+        fabEl.style.display = 'none';
+        sidebarEl.classList.add('active');
+      }
+    }
     
     // Media Toggle
     videoBtnEl.addEventListener('click', () => {
@@ -799,7 +1055,6 @@
       pipContainerEl.style.display = 'none';
       pipVideoEl.pause();
       
-      // Resume main player if we're back to the main view
       if (blogDetailEl.style.display === 'none') {
         initMedia();
       }
@@ -818,6 +1073,10 @@
     document.addEventListener('mouseup', dragEnd);
     document.addEventListener('mousemove', drag);
     
+    pipHeaderEl.addEventListener('touchstart', touchStart, { passive: false });
+    document.addEventListener('touchend', touchEnd, { passive: false });
+    document.addEventListener('touchmove', touchMove, { passive: false });
+    
     function dragStart(e) {
       initialX = e.clientX - xOffset;
       initialY = e.clientY - yOffset;
@@ -827,7 +1086,22 @@
       }
     }
     
+    function touchStart(e) {
+      initialX = e.touches[0].clientX - xOffset;
+      initialY = e.touches[0].clientY - yOffset;
+      
+      if (e.target === pipHeaderEl || e.target.parentNode === pipHeaderEl) {
+        isDragging = true;
+      }
+    }
+    
     function dragEnd() {
+      initialX = currentX;
+      initialY = currentY;
+      isDragging = false;
+    }
+    
+    function touchEnd() {
       initialX = currentX;
       initialY = currentY;
       isDragging = false;
@@ -845,6 +1119,18 @@
       }
     }
     
+    function touchMove(e) {
+      if (isDragging) {
+        e.preventDefault();
+        currentX = e.touches[0].clientX - initialX;
+        currentY = e.touches[0].clientY - initialY;
+        xOffset = currentX;
+        yOffset = currentY;
+        
+        setTranslate(currentX, currentY, pipContainerEl);
+      }
+    }
+    
     function setTranslate(xPos, yPos, el) {
       el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
     }
@@ -853,18 +1139,13 @@
     blogItemEls.forEach(item => {
       item.addEventListener('click', () => {
         blogDetailEl.style.display = 'block';
-        
-        // Always show PiP when viewing a blog
         pipContainerEl.style.display = 'block';
         
-        // Copy current media state to PiP
         if (videoBtnEl.classList.contains('active')) {
-          // If video is active, sync the PiP video with main video
           pipVideoEl.currentTime = mainVideoEl.currentTime;
           pipVideoEl.play();
           mainVideoEl.pause();
         } else {
-          // If audio is active, show a static tuner in PiP
           pipVideoEl.pause();
           pipVideoEl.poster = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-05-17%20200622-dLTwG1gGB37DbRNkVgqoip0cWWjMEa.png';
         }
@@ -874,24 +1155,15 @@
     // Back Button
     backBtnEl.addEventListener('click', () => {
       blogDetailEl.style.display = 'none';
-      
-      // Hide PiP when returning to main view
       pipContainerEl.style.display = 'none';
-      
-      // Resume main player
       initMedia();
     });
     
     // Category Selection
     categoryEls.forEach(category => {
       category.addEventListener('click', () => {
-        // Remove active class from all categories
         categoryEls.forEach(cat => cat.classList.remove('active'));
-        
-        // Add active class to clicked category
         category.classList.add('active');
-        
-        // Filter blogs logic would go here
       });
     });
     
@@ -899,15 +1171,40 @@
     themeToggleEl.addEventListener('click', () => {
       const currentTheme = htmlEl.getAttribute('data-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      
       htmlEl.setAttribute('data-theme', newTheme);
       themeToggleEl.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+    });
+    
+    // Menu Toggle
+    menuToggleEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sidebarEl.classList.toggle('active');
+      menuToggleEl.textContent = sidebarEl.classList.contains('active') ? '✕ Close' : '☰ Blogs';
+    });
+    
+    // FAB Toggle
+    fabEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sidebarEl.classList.toggle('active');
+      fabEl.textContent = sidebarEl.classList.contains('active') ? '✕' : '☰';
+    });
+    
+    // Close sidebar when clicking outside (only on small screens)
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768 && 
+          !sidebarEl.contains(e.target) && 
+          e.target !== menuToggleEl &&
+          e.target !== fabEl) {
+        sidebarEl.classList.remove('active');
+        menuToggleEl.textContent = '☰ Blogs';
+        fabEl.textContent = '☰';
+      }
     });
     
     // Simulate knob turning
     const knobEls = document.querySelectorAll('.knob-dial');
     knobEls.forEach(knob => {
-      let rotation = 45; // Initial rotation
+      let rotation = 45;
       
       knob.addEventListener('mousedown', (e) => {
         const startY = e.clientY;
@@ -915,10 +1212,9 @@
         function handleMouseMove(e) {
           const deltaY = startY - e.clientY;
           rotation += deltaY / 2;
-          rotation = Math.max(0, Math.min(270, rotation)); // Limit rotation
+          rotation = Math.max(0, Math.min(270, rotation));
           knob.style.transform = `rotate(${rotation}deg)`;
           
-          // Adjust volume if this is the volume knob
           if (knob.nextElementSibling.textContent === 'Volume') {
             const volume = rotation / 270;
             mainVideoEl.volume = volume;
@@ -936,55 +1232,18 @@
         document.addEventListener('mouseup', handleMouseUp);
       });
       
-      // Set initial rotation
       knob.style.transform = `rotate(${rotation}deg)`;
     });
     
-    // Handle touch events for mobile
-    pipHeaderEl.addEventListener('touchstart', touchStart, { passive: false });
-    document.addEventListener('touchend', touchEnd, { passive: false });
-    document.addEventListener('touchmove', touchMove, { passive: false });
-    
-    function touchStart(e) {
-      initialX = e.touches[0].clientX - xOffset;
-      initialY = e.touches[0].clientY - yOffset;
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      updateSidebarVisibility();
       
-      if (e.target === pipHeaderEl || e.target.parentNode === pipHeaderEl) {
-        isDragging = true;
+      if (window.innerWidth <= 768 && pipContainerEl.style.display === 'block') {
+        pipContainerEl.style.width = '200px';
+        pipContainerEl.style.height = '113px';
       }
-    }
-    
-    function touchEnd() {
-      initialX = currentX;
-      initialY = currentY;
-      isDragging = false;
-    }
-    
-    function touchMove(e) {
-      if (isDragging) {
-        e.preventDefault();
-        currentX = e.touches[0].clientX - initialX;
-        currentY = e.touches[0].clientY - initialY;
-        xOffset = currentX;
-        yOffset = currentY;
-        
-        setTranslate(currentX, currentY, pipContainerEl);
-      }
-    }
-    
-    // Handle responsive layout
-    function handleResize() {
-      if (window.innerWidth <= 768) {
-        // Mobile layout adjustments
-        if (pipContainerEl.style.display === 'block') {
-          pipContainerEl.style.width = '200px';
-          pipContainerEl.style.height = '113px';
-        }
-      }
-    }
-    
-    window.addEventListener('resize', handleResize);
-    handleResize(); // Call once on load
+    });
   </script>
 </body>
 </html>
